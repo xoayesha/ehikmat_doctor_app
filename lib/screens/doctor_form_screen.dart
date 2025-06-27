@@ -68,10 +68,12 @@ class _DoctorFormScreenState extends State<DoctorFormScreen> {
   ];
   final genders = ['Male', 'Female', 'Other'];
   final specialisations = [
-    'General Tibb',
-    'Skin',
-    'Women Health',
-    'Mental Health',
+    {'key': 'general_tibb', 'label': 'General Tibb'},
+    {'key': 'hijama', 'label': 'Hijama'},
+    {'key': 'nutrition', 'label': 'Nutrition'},
+    {'key': 'cupping', 'label': 'Cupping'},
+    {'key': 'spiritual_healing', 'label': 'Spiritual Healing'},
+    {'key': 'herbal', 'label': 'Herbal Medicine'},
   ];
   final servicesList = [
     {'key': 'cupping_therapy', 'label': 'Cupping Therapy'},
@@ -245,9 +247,9 @@ class _DoctorFormScreenState extends State<DoctorFormScreen> {
           _dropdown(
             'Primary *',
             specialisations
-                .map((s) => s.toLowerCase().replaceAll(' ', '_'))
+                .map((s) => s['key'] as String)
                 .toList(),
-            labels: specialisations,
+            labels: specialisations.map((s) => s['label'] as String).toList(),
             save: (v) => profile['primary_specialization'] = v,
           ),
           const SizedBox(height: 8),
@@ -257,7 +259,7 @@ class _DoctorFormScreenState extends State<DoctorFormScreen> {
             items: specialisations
                 .map(
                   (s) =>
-                      MultiSelectItem(s.toLowerCase().replaceAll(' ', '_'), s),
+                      MultiSelectItem(s['key'] as String, s['label'] as String),
                 )
                 .toList(),
             onConfirm: (vals) => profile['secondary_specialization'] = vals,
