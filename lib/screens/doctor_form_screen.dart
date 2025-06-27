@@ -421,8 +421,7 @@ class _DoctorFormScreenState extends State<DoctorFormScreen> {
             title: const Text('Services Provided'),
             items: servicesList
                 .map(
-                  (s) =>
-                      MultiSelectItem(s['key'], s['label']),
+                  (s) => MultiSelectItem<String>(s['key'] as String, s['label'] as String),
                 )
                 .toList(),
             onConfirm: (vals) => profile['services'] = vals,
