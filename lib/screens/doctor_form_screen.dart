@@ -63,7 +63,9 @@ class _DoctorFormScreenState extends State<DoctorFormScreen> {
   };
 
   // ── Look‑up lists ──
-  final cities = ['Lahore', 'Karachi', 'Islamabad', 'Peshawar'];
+  final cities = [
+    'Lahore', 'Karachi', 'Islamabad', 'Multan', 'Faisalabad', 'Rawalpindi', 'Quetta', 'Peshawar'
+  ];
   final genders = ['Male', 'Female', 'Other'];
   final specialisations = [
     'General Tibb',
@@ -71,10 +73,21 @@ class _DoctorFormScreenState extends State<DoctorFormScreen> {
     'Women Health',
     'Mental Health',
   ];
-  final servicesList = ['Herbal Treatment', 'Cupping', 'Counseling'];
-  final conditionsList = ['Acne', 'Diabetes', 'Arthritis', 'Flu'];
-  final countries = ['Pakistan', 'UK', 'USA', 'UAE', 'India'];
-  final degrees = ['BEMS', 'MD (Tibb)', 'Fellowship'];
+  final servicesList = [
+    {'key': 'cupping_therapy', 'label': 'Cupping Therapy'},
+    {'key': 'herbal_consultation', 'label': 'Herbal Consultation'},
+    {'key': 'diet_plan', 'label': 'Diet Plan'},
+    {'key': 'pain_management', 'label': 'Pain Management'},
+  ];
+  final conditionsList = [
+    'Back Pain',
+    'Migraine',
+    'Diabetes',
+    'Blood Pressure',
+    'Infertility',
+  ];
+  final countries = ['Pakistan', 'India', 'UAE', 'USA', 'UK', 'Afghanistan', 'Iran'];
+  final degrees = ['BEMS', 'DUMS', 'FTJ', 'RHMP'];
 
   // ── Helpers ──
   Future<void> _pickImage() async {
@@ -409,7 +422,7 @@ class _DoctorFormScreenState extends State<DoctorFormScreen> {
             items: servicesList
                 .map(
                   (s) =>
-                      MultiSelectItem(s.toLowerCase().replaceAll(' ', '_'), s),
+                      MultiSelectItem(s['key'], s['label']),
                 )
                 .toList(),
             onConfirm: (vals) => profile['services'] = vals,
