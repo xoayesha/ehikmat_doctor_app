@@ -6,8 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:http/http.dart' as http;
 
-/// Change this to your backend; for Android‑emulator use 10.0.2.2
-const String apiUrl = 'http://192.168.1.42:8000/api/hakeems/profile/';
+import '../services/api_service.dart';
+import '../constants/api_constants.dart';
 
 void main() => runApp(const EhikmatDoctorApp());
 
@@ -124,9 +124,13 @@ class _DoctorFormScreenState extends State<DoctorFormScreen> {
     );
 
     try {
+      final token = await AuthService.getToken();
       final res = await http.post(
-        Uri.parse(apiUrl),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse(ApiConstants.baseUrl + ApiConstants.doctorProfile),
+        headers: {
+          'Content-Type': 'application/json',
+          if (token != null) 'Authorization': 'Bearer $token',
+        },
         body: jsonEncode(profile),
       );
 
@@ -137,17 +141,22 @@ class _DoctorFormScreenState extends State<DoctorFormScreen> {
       debugPrint('📥 Response status: ${res.statusCode}');
       debugPrint('📥 Response body:${res.body}');
 
-      if (res.statusCode == 200 || res.statusCode == 201) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Profile submitted ✔')));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Server error ${res.statusCode}: ${res.body}'),
-          ),
-        );
-      }
+      print('Response status: ${res.statusCode}');
+      print('Response body: ${res.body}');
+
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(res.statusCode == 200 || res.statusCode == 201 ? 'Profile Submitted' : 'Submission Error'),
+          content: SingleChildScrollView(child: Text('Status: ${res.statusCode}\nBody: ${res.body}')),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     } catch (e) {
       if (!context.mounted) return;
       Navigator.of(context).pop();
